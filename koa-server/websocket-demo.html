@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <button id="connect">lianjie</button>
+    <button id="send">fasong</button><br>
+    从服务端接受的数据如下：<br>
+    <span id="recv"></span>
+    <script>
+        var connect = document.querySelector('#connect');
+        var send = document.querySelector('#send');
+        var recv = document.querySelector('#recv');
+        let ws = null
+        console.log(connect)
+        connect.onclick = function () {
+            console.log("connect")
+            ws = new WebSocket('ws://localhost:9999')
+            ws.onopen = () => {
+                console.log('链接服务器成功了')
+            }
+            ws.onclose = () => {
+                console.log("链接服务器失败")
+            }
+            ws.onmessage = msg => {
+                console.log(msg)
+                recv.innerHTML = msg.data;
+            }
+        }
+
+        send.onclick = function () {
+            ws.send(JSON.stringify({
+                action: 'getData',
+                socketType: 'trendData',
+                chartName: 'trend',
+                value: ''
+            }))
+        }
+    </script>
+</body>
+
+</html>
